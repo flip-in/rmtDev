@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { JobItem } from "./types";
+import { JobItem, JobItemExpanded } from "./types";
 import { BASE_API_URL } from "./constants";
 
 export function useActiveId() {
@@ -25,7 +25,7 @@ export function useActiveId() {
 }
 
 export function useJobItem(id: number | null) {
-  const [jobItem, setJobItem] = useState(null);
+  const [jobItem, setJobItem] = useState<JobItemExpanded | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -40,6 +40,14 @@ export function useJobItem(id: number | null) {
 
   return jobItem
 
+}
+
+//can be used to get the active job item by combining the above two hooks
+export function useActiveJobItem () {
+  const id = useActiveId() ;
+  const jobItem = useJobItem(id)
+
+  return jobItem
 }
 
 export function useJobItems(searchText: string) {
