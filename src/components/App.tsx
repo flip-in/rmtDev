@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Background from './Background';
 import Container from './Container';
 import Footer from './Footer';
@@ -12,11 +12,13 @@ import JobList from './JobList';
 import PaginationControls from './PaginationControls';
 import ResultsCount from './ResultsCount';
 import SortingControls from './SortingControls';
-import { useJobItems } from '../lib/hooks';
+import { useActiveId, useJobItem, useJobItems } from '../lib/hooks';
 
 function App() {
   const [searchText, setSearchText] = useState('');
   const [jobItems, isLoading] = useJobItems(searchText);
+  const activeId = useActiveId();
+  const jobItem = useJobItem(activeId);
 
   return (
     <>
