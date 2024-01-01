@@ -13,6 +13,7 @@ import PaginationControls from './PaginationControls';
 import ResultsCount from './ResultsCount';
 import SortingControls from './SortingControls';
 import { useDebounce, useJobItemsQuery } from '../lib/hooks';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [searchText, setSearchText] = useState('');
@@ -25,6 +26,7 @@ function App() {
   return (
     <>
       <Background />
+
       <Header>
         <HeaderTop>
           <Logo />
@@ -32,6 +34,7 @@ function App() {
         </HeaderTop>
         <SearchForm searchText={searchText} setSearchText={setSearchText} />
       </Header>
+
       <Container>
         <Sidebar>
           <SidebarTop>
@@ -43,7 +46,10 @@ function App() {
         </Sidebar>
         <JobItemContent />
       </Container>
+
       <Footer />
+
+      <Toaster position='top-right' />
     </>
   );
 }
