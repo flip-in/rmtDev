@@ -42,7 +42,7 @@ export function useJobItem(id: number | null) {
     fetchData();
   }, [id]);
 
-  return  [jobItem, isLoading ] as const;
+  return  {jobItem, isLoading} as const;
 
 }
 
@@ -78,7 +78,20 @@ export function useJobItems(searchText: string) {
     fetchData();
   }, [searchText]);
 
-  return [jobItemsSliced, isLoading, totalNumberOfResults ] as const;
+  return {jobItemsSliced, isLoading, totalNumberOfResults}  as const;
+
+}
+
+export function useDebounce<T>(value: T, delay = 500): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => setDebouncedValue(value), delay);
+
+    return () => clearTimeout(timerId);
+  }, [value, delay]);
+
+  return debouncedValue
 
 }
 
