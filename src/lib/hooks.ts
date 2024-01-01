@@ -19,7 +19,6 @@ const fetchJobItem = async (id:number): Promise<JobItemApiResponse> => {
   return data
 }
 
-
 export function useJobItemQuery(id: number | null) {
   const {data, isInitialLoading} = useQuery(
     ['job-item', id],
@@ -56,7 +55,6 @@ const fetchJobItems = async (searchText: string): Promise<JobItemsApiResponse> =
   const data = await response.json();
   return data
 }
-
 
 export function useJobItemsQuery(searchText: string) {
   const {data, isInitialLoading} = useQuery(
