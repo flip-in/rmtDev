@@ -51,8 +51,6 @@ export function useJobItems(ids: number[]) {
     }))
   })
 
-  console.log(results)
-
   const jobItems = results.map((result) => result.data?.jobItem)
   // .filter(jobItem => jobItem !== undefined)
   // .filter(jobItem => !!jobItem)
@@ -151,10 +149,7 @@ export function useActiveJobItem () {
 }
 
 export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [value, setValue] = useState<T>(() => {
-    const localData = localStorage.getItem(key)
-    return localData ? JSON.parse(localData) : localStorage.setItem(key, JSON.stringify(initialValue));
-  });
+  const [value, setValue] = useState(() => JSON.parse(localStorage.getItem(key) || JSON.stringify(initialValue)));
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
