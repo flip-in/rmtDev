@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { JobItem, JobItemExpanded} from "./types";
 import { BASE_API_URL } from "./constants";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { handleError } from "./utils";
 import { BookmarksContext } from "../contexts/BookmarksContextProvider";
 
@@ -9,7 +9,7 @@ type JobItemApiResponse = {
   public: boolean,
   jobItem: JobItemExpanded
 }
-
+// ------------------------------------
 const fetchJobItem = async (id:number): Promise<JobItemApiResponse> => {
   const response = await fetch(`${BASE_API_URL}/${id}`);
   if (!response.ok) {
@@ -38,6 +38,35 @@ export function useJobItemQuery(id: number | null) {
 
 }
 
+export function useJobItems(ids: number[]) {
+  const results = useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ['job-item', id],
+      queryFn: () => fetchJobItem(id),
+      staleTime: 1000 * 60 * 60, //one hour
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: Boolean(id),
+      onError: handleError
+    }))
+  })
+
+  console.log(results)
+
+  const jobItems = results.map((result) => result.data?.jobItem)
+  // .filter(jobItem => jobItem !== undefined)
+  // .filter(jobItem => !!jobItem)
+  .filter(jobItem => Boolean(jobItem)) as JobItemExpanded[]
+  const isLoading = results.some((result) => result.isLoading)
+
+  return {jobItems, isLoading} as const;
+}
+
+
+
+
+
+// ---------------------------------
 type JobItemsApiResponse = {
   public: boolean,
   sorted: boolean,
@@ -57,7 +86,7 @@ const fetchJobItems = async (searchText: string): Promise<JobItemsApiResponse> =
   return data
 }
 
-export function useJobItemsQuery(searchText: string) {
+export function useSearchQuery(searchText: string) {
   const {data, isInitialLoading} = useQuery(
     ['job-items', searchText],
     () => fetchJobItems(searchText),
@@ -123,8 +152,8 @@ export function useActiveJobItem () {
 
 export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState<T>(() => {
-    const localData = localStorage.getItem(key);
-    return localData ? JSON.parse(localData) : JSON.stringify(initialValue);
+    const localData = localStorage.getItem(key)
+    return localData ? JSON.parse(localData) : localStorage.setItem(key, JSON.stringify(initialValue));
   });
 
   useEffect(() => {
