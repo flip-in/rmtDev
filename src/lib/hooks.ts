@@ -105,6 +105,8 @@ export function useSearchQuery(searchText: string) {
 
 }
 
+// ---------------------------------
+
 export function useDebounce<T>(value: T, delay = 500): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -156,6 +158,24 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Disp
   }, [value, key]);
 
   return [value, setValue] as const;
+}
+
+export function useOnClickOutside(refs: React.RefObject<HTMLElement>[], handler: () => void) {
+ 
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        refs.every(ref => !ref.current?.contains(e.target as Node))
+      ) {
+        handler()
+      }
+    };
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [refs, handler]);
 }
 
 //-----------------useContext-----------------
