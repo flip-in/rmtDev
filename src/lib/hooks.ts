@@ -63,10 +63,6 @@ export function useJobItems(ids: number[]) {
   return {jobItems, isLoading} as const;
 }
 
-
-
-
-
 // ---------------------------------
 type JobItemsApiResponse = {
   public: boolean,
