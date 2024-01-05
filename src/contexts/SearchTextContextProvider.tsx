@@ -1,0 +1,35 @@
+import { ReactNode, createContext, useState } from 'react';
+import { useDebounce } from '../lib/hooks';
+
+type TSearchTextContext = {
+  searchText: string;
+  debouncedSearchText: string;
+  handleChangeSearchText: (newSearchText: string) => void;
+};
+
+export const SearchTextContext = createContext<TSearchTextContext | null>(null);
+
+export default function SearchTextContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
+
+  const handleChangeSearchText = (newSearchText: string) => {
+    setSearchText(newSearchText);
+  };
+
+  return (
+    <SearchTextContext.Provider
+      value={{
+        searchText,
+        debouncedSearchText,
+        handleChangeSearchText,
+      }}
+    >
+      {children}
+    </SearchTextContext.Provider>
+  );
+}
