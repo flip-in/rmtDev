@@ -149,7 +149,7 @@ export function useActiveJobItem () {
   return jobItem
 }
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+export function useLocalStorage<T>(key: string, initialValue: T): readonly [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState(() => JSON.parse(localStorage.getItem(key) || JSON.stringify(initialValue)));
 
   useEffect(() => {
